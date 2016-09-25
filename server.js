@@ -7,10 +7,10 @@ app.use(morgan('combined'));
 
 var articles={
     'article-one':{
-        'heading':'Article One | ASP',
-        'title':'Article One',
-        'date':'Sep 23 2016',
-        'content':`<p>
+        heading:'Article One | ASP',
+        title:'Article One',
+        date:'Sep 23 2016',
+        content:`<p>
                     This is the first article.This is the first article.This is the first article.
                     This is the first article.This is the first article.This is the first article.
                 </p>
@@ -24,18 +24,18 @@ var articles={
                 </p>`
     },
     'article-two':{
-		'heading':'Article Two | ASP',
-        'title':'Article Two',
-        'date':'Sep 24 2016',
-        'content':`<p>
+		heading:'Article Two | ASP',
+        title:'Article Two',
+        date:'Sep 24 2016',
+        content:`<p>
                 This is the second article.
                 </p>`
 	},
     'article-three':{
-		'heading':'Article three | ASP',
-        'title':'Article Three',
-        'date':'Sep 24 2016',
-        'content':`<p>
+		heading:'Article three | ASP',
+        title:'Article Three',
+        date:'Sep 24 2016',
+        content:`<p>
                 This is the third article.
                 </p>`
 	}

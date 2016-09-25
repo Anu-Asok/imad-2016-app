@@ -6,7 +6,6 @@ var app = express();
 app.use(morgan('combined'));
 
 var articleOne={
-    'article-one':{
         heading:'Article One | ASP',
         title:'Article One',
         date:'Sep 23 2016',
@@ -22,7 +21,6 @@ var articleOne={
                     This is the first article.This is the first article.This is the first article.
                     This is the first article.This is the first article.This is the first article.
                 </p>`
-    },
 };
 
 function create_template(data){

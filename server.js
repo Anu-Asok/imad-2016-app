@@ -5,8 +5,8 @@ var path = require('path');
 var app = express();
 app.use(morgan('combined'));
 
-var articles={
-    'article-one':{
+var articleOne={
+   // 'article-one':{
         title:'Article One',
         heading:'Article One | ASP',
         date:'Sep 23 2016',
@@ -22,7 +22,7 @@ var articles={
                     This is the first article.This is the first article.This is the first article.
                     This is the first article.This is the first article.This is the first article.
                 </p>`
-    }
+   // }
 };
 
 function create_template(data){
@@ -66,8 +66,8 @@ app.get('/', function (req, res) {
   res.sendFile(path.join(__dirname, 'ui', 'index.html'));
 });
 
-app.get('/article-one',function(req,res){
-	res.send(create_template(articles[article-one]));
+app.get('/articleOne',function(req,res){
+	res.send(create_template(articleOne));
 });
 
 app.get('/ui/style.css', function (req, res) {

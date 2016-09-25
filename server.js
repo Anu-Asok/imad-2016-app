@@ -79,8 +79,8 @@ app.get('/article-three',function(req,res){
 });
 
 */
-app.get('/:articlename',function(req,res){
-	res.send(create_template(articles[articlename]));
+app.get('/:articleName',function(req,res){
+	res.send(create_template(articles[articleName]));
 });
 
 app.get('/ui/style.css', function (req, res) {

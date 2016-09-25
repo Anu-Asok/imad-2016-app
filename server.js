@@ -23,6 +23,7 @@ var articleOne={
                 </p>`
 };
 
+
 function create_template(data){
     
     var title=data.title;

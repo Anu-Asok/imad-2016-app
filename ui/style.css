@@ -1,15 +1,12 @@
 body {
-    font-family: sans-serif;
-    background-color: lightgrey;
-    margin-top: 75px;
+    font-family: comic sans ms;
+    background-color: #4580ad;
+    margin-top: 45px;
 }
 
-.center {
-    text-align: center;
-}
 
 .text-big {
-    font-size: 300%;
+    font-size: 125%;
 }
 
 .bold {
@@ -23,8 +20,12 @@ body {
     max-width: 800px;
     margin: 0 auto;
     color: #000000;
-    font-family: sans-serif;
+    font-family: comic sans ms;
     padding-top: 53px;
     padding-left: 10px;
     padding-right: 20px;
+}
+
+.Description{
+	
 }

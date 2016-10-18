@@ -43,7 +43,7 @@ var articles={
 
 
 function create_template(data){
-    
+
     var title=data.title;
     var date=data.date;
     var heading=data.heading;
@@ -83,16 +83,42 @@ app.get('/', function (req, res) {
   res.sendFile(path.join(__dirname, 'ui', 'index.html'));
 });
 
-var counter=0;  
+var counter=0;
+app.get('/counter',function(req,res){
+	counter=counter+1;
+	res.send(counter.toString());
+});
+
+app.get('/Breaking-Bad',function(req,res){
+	res.sendFile(path.join(__dirname,'ui','BreakingBad.html'));
+});
+
+app.get('/ui/main.js',function(req,res){
+	res.sendFile(path.join(__dirname,'ui','main.js'));
+});
+
+var counter=0;
 
 app.get('/counter',function(req,res){
-    counter = counter + 1; 
-    res.send(counter.toString()); 
+    counter = counter + 1;
+    res.send(counter.toString());
+});
+
+var names=[];
+app.get('/submit-name',function(req,res){
+	var name=req.query.name;
+	names.push(name);
+	res.send(JSON.stringify(names));
 });
 
 app.get('/:articleName',function(req,res){
     var articleName=req.params.articleName;
 	res.send(create_template(articles[articleName]));
+});
+
+
+app.get('/article-one',function(req,res){
+	res.sendFile(path.join(__dirname, 'ui', 'article-one.html'));
 });
 
 app.get('/ui/style.css', function (req, res) {

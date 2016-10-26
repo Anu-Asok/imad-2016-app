@@ -90,7 +90,7 @@ app.get('/counter',function(req,res){
 });
 
 app.get('/icon',function(req,res){
-	res.sendFile(path.join(__dirname,'ui','icon.png');
+	res.sendFile(path.join(__dirname,'ui','icon.png'));
 });
 
 app.get('/ui/main.js',function(req,res){

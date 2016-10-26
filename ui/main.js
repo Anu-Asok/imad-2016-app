@@ -1,5 +1,6 @@
-var button = document.getElementById('click');
 var url="localhost:8080";
+
+var button = document.getElementById('click');
 button.onclick=function(){
   var request=new XMLHttpRequest();
         request.onreadystatechange=function(){

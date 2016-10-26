@@ -89,12 +89,15 @@ app.get('/counter',function(req,res){
 	res.send(counter.toString());
 });
 
-app.get('/Breaking-Bad',function(req,res){
-	res.sendFile(path.join(__dirname,'ui','BreakingBad.html'));
-});
-
 app.get('/ui/main.js',function(req,res){
 	res.sendFile(path.join(__dirname,'ui','main.js'));
+});
+
+var names=[];
+app.get('/submit-name',function(req,res){
+	var name=req.query.name;
+	names.push(name);
+	res.send(JSON.stringify(names));
 });
 
 app.get('/:user-name',function(req,res){
@@ -106,17 +109,6 @@ var counter=0;
 app.get('/counter',function(req,res){
     counter = counter + 1;
     res.send(counter.toString());
-});
-
-app.get('/download',function(req,res){
-	res.download('/home/anupam/IMAD/webapp/imad-2016-app/ui/favicon.png');
-});
-
-var names=[];
-app.get('/submit-name',function(req,res){
-	var name=req.query.name;
-	names.push(name);
-	res.send(JSON.stringify(names));
 });
 
 app.get('/:articleName',function(req,res){

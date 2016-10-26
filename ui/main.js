@@ -37,3 +37,16 @@ submit.onclick=function(){
   request.open('GET','http://localhost:8080/submit-name?name='+name,true);
   request.send(null);
 };
+/*
+var element=document.getElementById('title');
+
+element.innerHTML="Onnupodey!";
+var marginLeft=0;
+function moveRight(){
+  marginLeft=marginLeft+10;
+  element.style.marginLeft=marginLeft+'px';
+}
+element.onclick=function(){
+    setInterval(moveRight,100);
+}
+*/

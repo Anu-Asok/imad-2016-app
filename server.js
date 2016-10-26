@@ -97,11 +97,19 @@ app.get('/ui/main.js',function(req,res){
 	res.sendFile(path.join(__dirname,'ui','main.js'));
 });
 
+app.get('/:user-name',function(req,res){
+	res.send(req.params);
+});
+
 var counter=0;
 
 app.get('/counter',function(req,res){
     counter = counter + 1;
     res.send(counter.toString());
+});
+
+app.get('/download',function(req,res){
+	res.download('/home/anupam/IMAD/webapp/imad-2016-app/ui/favicon.png');
 });
 
 var names=[];

@@ -1,4 +1,4 @@
-var url="localhost:8080";
+var url="anu-asok.imad.hasura-app.io";
 
 var button = document.getElementById('click');
 button.onclick=function(){

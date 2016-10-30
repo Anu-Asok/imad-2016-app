@@ -105,7 +105,7 @@ app.get('/submit-name',function(req,res){
 var pool=new Pool(config);
 app.get('/test-db',function(req,res){
         var title="article-one";
-      pool.query('UPDATE articles SET likes=likes+1 WHERE title=$',[title],function(err,result){
+      pool.query('UPDATE articles SET likes=likes+1 WHERE title=$1',[title],function(err,result){
          if(err)
             res.status(500).send(err.toString());
         else

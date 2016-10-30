@@ -78,7 +78,7 @@ function create_template(data){
             - ${author}
             <hr/>
             <div>
-                ${date}
+                ${date.toDateString()}
             </div>
             <div>
                 ${content}

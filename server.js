@@ -53,6 +53,7 @@ function create_template(data){
         <br/>
         <button id="likes">Like This?</button> -> <span id="like">${counter}</span>
          </div>
+        <script type="text/javascript">
         var button = document.getElementById('likes');
         button.onclick=function(){
             
@@ -68,6 +69,7 @@ function create_template(data){
                    }
                }    
             });
+        </script>
 };
 
     </body>

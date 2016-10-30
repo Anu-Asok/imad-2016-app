@@ -69,8 +69,8 @@ function create_template(data){
                    }
                }    
             });
+        };
         </script>
-};
 
     </body>
     </html>`;

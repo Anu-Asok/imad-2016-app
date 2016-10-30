@@ -56,7 +56,7 @@ function create_template(data){
         <script type="text/javascript">
         var button = document.getElementById('likes');
         button.onclick=function(){
-          pool.query("UPDATE articles SET likes = likes + 1 WHERE title=$1",[title],function(err,result){});
+          pool.query("UPDATE articles SET likes = likes + 1 WHERE title=$1",[title],function(err,result){res.send("")});
           pool.query("SELECT likes FROM articles WHERE title=$1",[title],function(err,result){
                if(err)
                 res.status(500).send(err.toString());
@@ -104,12 +104,11 @@ app.get('/submit-name',function(req,res){
 
 var pool=new Pool(config);
 app.get('/test-db',function(req,res){
-        var title="article-one";
-      pool.query('UPDATE articles SET likes=likes+1 WHERE title=$1',[title],function(err,result){
+      pool.query('SELECT * FROM test',function(err,result){
          if(err)
             res.status(500).send(err.toString());
         else
-            res.send("");
+            res.send(JSON.stringify(result.rows));
       });
 });
 

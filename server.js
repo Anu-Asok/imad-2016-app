@@ -20,6 +20,7 @@ function create_template(data){
     var heading=data.heading;
     var content=data.content;
     var author=data.author;
+    var counter=data.likes;
 	console.log(title);
     var htmltemplate=
     `<html>
@@ -48,6 +49,13 @@ function create_template(data){
                 ${content}
             </div>
         </div>
+        <div class="footer">
+        <br/>
+        <button id="click">Like This?</button> -> <span id="count">${counter}</span>
+         </div>
+        <input type="text" id="name" placeholder="name">
+         <input type="submit" value="Submit" id="submit_btn">
+         <ul id="namelist">
     </body>
     </html>`;
     return htmltemplate;

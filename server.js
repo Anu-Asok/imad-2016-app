@@ -51,12 +51,25 @@ function create_template(data){
         </div>
         <div class="footer">
         <br/>
-        <button id="click">Like This?</button> -> <span id="count">${counter}</span>
+        <button id="likes">Like This?</button> -> <span id="like">${counter}</span>
          </div>
-        <input type="text" id="name" placeholder="name">
-         <input type="submit" value="Submit" id="submit_btn">
-         <ul id="namelist">
-         <script type="text/javascript" src="/ui/main.js"></script>
+        var button = document.getElementById('likes');
+        button.onclick=function(){
+            
+          pool.query("SELECT likes FROM articles WHERE title=$1",[title],function(err,result){
+               if(err)
+                res.status(500).send(err.toString());
+               else{
+                   if(result.rows.length === 0)
+                    res.status(404).send("No likes");
+                   else{
+                       var span=document.getElementById('like');
+                       span.innerHTML=result.toString();
+                   }
+               }    
+            });
+};
+
     </body>
     </html>`;
     return htmltemplate;

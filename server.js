@@ -71,7 +71,7 @@ function create_template(data){
             <div>
                 <a href="/">Home</a>
             </div>
-            <hr/>
+            <br/>
             <h3>
                 ${heading}
             </h3>

@@ -55,6 +55,7 @@ function create_template(data){
     var date=data.date;
     var heading=data.heading;
     var content=data.content;
+    var author=data.author;
 	console.log(title);
     var htmltemplate=
     `<html>
@@ -74,6 +75,8 @@ function create_template(data){
             <h3>
                 ${heading}
             </h3>
+            - ${author}
+            <hr/>
             <div>
                 ${date}
             </div>

@@ -56,6 +56,7 @@ function create_template(data){
         <input type="text" id="name" placeholder="name">
          <input type="submit" value="Submit" id="submit_btn">
          <ul id="namelist">
+         <script type="text/javascript" src="/ui/main.js"></script>
     </body>
     </html>`;
     return htmltemplate;

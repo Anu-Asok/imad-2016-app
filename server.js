@@ -101,17 +101,44 @@ app.get('/counter',function(req,res){
 	res.send(counter.toString());
 });
 
+
 app.post('/create-user',function(req,res){
 	var username=req.body.username;
-	var password=req.body.password;
+	var password1=req.body.password;
 	var salt=crypto.randomBytes(128).toString('hex');
-	var dbString=hash(password,salt);
+	var dbString=hash(password1,salt);
 	pool.query('INSERT INTO "user" (username,password) VALUES($1,$2)',[username,dbString],function(err,result){
 		if(err){
 			res.status(500).send(err.toString());
 		}
 		else{
 			res.send('User successfully created: '+ username);
+		}
+	});
+});
+
+app.post('/login',function(req,res){
+	var username='dhoom';
+	var password1='1234dhoo';
+	pool.query('SELECT * FROM "user" WHERE username=$1',[username],function(err,result){
+		if(err){
+			res.status(500).send(err.toString());
+		}
+		else{
+			if(result.rows.length === 0){
+				res.status(403).send('Username Invalid:'+username);
+			}
+			else{
+				var dbString=result.rows[0].password;
+				var salt=dbString.split('$')[2];
+				var hashedPassword=hash(password1,salt);
+				if(hashedPassword===dbString){
+					res.send('Correct credentials');			
+				}
+				else{
+					res.send('Incorrect password');
+				}
+			}
 		}
 	});
 });

@@ -70,7 +70,7 @@ function create_template(data){
 					}
 				  }
 				}
-        request.open('GET',"http://localhost:8080/articles-counter/${title}",true);
+        request.open('GET',"http://anu-asok.imad.hasura-app.io/articles-counter/${title}",true);
         request.send(null);
 		};
 		</script>

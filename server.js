@@ -2,6 +2,7 @@ var express = require('express');
 var morgan = require('morgan');
 var path = require('path');
 var Pool = require('pg').Pool;
+var crypto = require('crypto');
 var config={
     user:"anu-asok",
     database:"anu-asok",
@@ -12,6 +13,8 @@ var config={
 var app = express();
 app.use(morgan('combined'));
 
+var bodyParser=require('body-parser');
+app.use(bodyParser.json());
 
 function create_template(data){
 
@@ -21,12 +24,13 @@ function create_template(data){
     var content=data.content;
     var author=data.author;
     var counter=data.likes;
+	var url="localhost:8080";
 	console.log(title);
     var htmltemplate=
     `<html>
     <head>
         <title>
-            ${title}
+			${title}
         </title>
         <meta name='viewport' content='width=device-width,initial-scale=1'/>
         <link href="/ui/style.css" rel="stylesheet" />
@@ -53,24 +57,23 @@ function create_template(data){
         <br/>
         <button id="likes">Like This?</button> -> <span id="like">${counter}</span>
          </div>
-        <script type="text/javascript">
-        var button = document.getElementById('likes');
-        button.onclick=function(){
-          pool.query("UPDATE articles SET likes = likes + 1 WHERE title=$1",[title],function(err,result){res.send("")});
-          pool.query("SELECT likes FROM articles WHERE title=$1",[title],function(err,result){
-               if(err)
-                res.status(500).send(err.toString());
-               else{
-                   if(result.rows.length === 0)
-                    res.status(404).send("No likes");
-                   else{
-                       var span=document.getElementById('like');
-                       span.innerHTML=result.toString();
-                   }
-               }    
-            });
-        };
-        </script>
+        <script type="text/javascript" >
+		var button = document.getElementById('likes');
+		button.onclick=function(){
+		  var request=new XMLHttpRequest();
+				request.onreadystatechange=function(){
+				  if(request.readyState === XMLHttpRequest.DONE){
+					if(request.status === 200){
+					  var counter=request.responseText;
+					  var span=document.getElementById('like');
+					  span.innerHTML=counter.toString();
+					}
+				  }
+				}
+        request.open('GET',"http://localhost:8080/articles-counter/${title}",true);
+        request.send(null);
+		};
+		</script>
 
     </body>
     </html>`;
@@ -81,10 +84,36 @@ app.get('/', function (req, res) {
   res.sendFile(path.join(__dirname, 'ui', 'index.html'));
 });
 
+
+function hash(input,salt){
+	var hashed=crypto.pbkdf2Sync(input,salt,10000,512,'sha512')
+	return hashed.toString('hex');
+}
+
+app.get('/hash/:input',function(req,res){
+	var hashed=hash(req.params.input,"this-is-some-random-string");
+	res.send(hashed);
+});
+
 var counter=0;
 app.get('/counter',function(req,res){
 	counter=counter+1;
 	res.send(counter.toString());
+});
+
+app.post('/create-user',function(req,res){
+	var username=req.body.username;
+	var password=req.body.password;
+	var salt=crypto.randomBytes(128).toString('hex');
+	var dbString=hash(password,salt);
+	pool.query('INSERT INTO "user" (username,password) VALUES($1,$2)',[username,dbString],function(err,result){
+		if(err){
+			res.status(500).send(err.toString());
+		}
+		else{
+			res.send('User successfully created: '+ username);
+		}
+	});
 });
 
 app.get('/icon',function(req,res){
@@ -103,34 +132,28 @@ app.get('/submit-name',function(req,res){
 });
 
 
-/*
- pool.query('SELECT * FROM test',function(err,result){
-         if(err)
-            res.status(500).send(err.toString());
-        else
-            res.send(JSON.stringify(result.rows));
-      });
-*/
-
 var pool=new Pool(config);
 app.get('/test-db',function(req,res){
-    var title="article-one";
-    pool.query('UPDATE articles SET likes=likes+1 WHERE title=$1',[title],function(err,res){
-        res.send("");
-    }); 
-    
+		 var title=document.getElementById("title");
+		 pool.query('UPDATE articles SET likes=likes+1 WHERE title=$1',[title],function(err,res){
+				res.send("");
+		});           
+		pool.query("SELECT likes FROM articles WHERE title=$1",[title],function(err,result){
+          res.send(result.toString());     
+            }); 
 });
 
-app.get('/:user-name',function(req,res){
-	res.send(req.params);
-});
 
-var counter=0;
-
-app.get('/counter',function(req,res){
-    counter = counter + 1;
-    res.send(counter.toString());
+app.get('/articles-counter/:title',function(req,res){
+	var title=req.params.title;
+	pool.query("UPDATE articles SET likes=likes+1 WHERE title='"+title+"'",function(err,result){
+				//res.send("");
+		});    
+    pool.query("SELECT likes FROM articles WHERE title='"+title+"'",function(err,result){
+       res.send(JSON.stringify(result.rows[0].likes));
+    });
 });
+		
 
 app.get('/articles/:articleName',function(req,res){
     var articleName=req.params.articleName;
@@ -146,11 +169,6 @@ app.get('/articles/:articleName',function(req,res){
            }
        }    
     });
-});
-
-
-app.get('/article-one',function(req,res){
-	res.sendFile(path.join(__dirname, 'ui', 'article-one.html'));
 });
 
 app.get('/ui/style.css', function (req, res) {

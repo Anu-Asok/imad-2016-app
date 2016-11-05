@@ -64,7 +64,7 @@ function create_template(data){
 				request.onreadystatechange=function(){
 				  if(request.readyState === XMLHttpRequest.DONE){
 					if(request.status === 200){
-					  var counter=request.responseText;
+					  var counter=parseInt(request.responseText)+1;
 					  var span=document.getElementById('like');
 					  span.innerHTML=counter.toString();
 					}
@@ -173,12 +173,12 @@ app.get('/test-db',function(req,res){
 
 app.get('/articles-counter/:title',function(req,res){
 	var title=req.params.title;
-	pool.query("UPDATE articles SET likes=likes+1 WHERE title='"+title+"'",function(err,result){
-				//res.send("");
-		});    
     pool.query("SELECT likes FROM articles WHERE title='"+title+"'",function(err,result){
        res.send(JSON.stringify(result.rows[0].likes));
     });
+	pool.query("UPDATE articles SET likes=likes+1 WHERE title='"+title+"'",function(err,result){
+			//res.send("");
+	});  
 });
 		
 

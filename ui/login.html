@@ -1,0 +1,84 @@
+<html>
+<head>
+<title>Login</title>
+<link rel="stylesheet" href="/ui/login.css"/>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="google-signin-client_id" content="184643677427-dlgot1bcotlcftfm59kj5v602nq3e5te.apps.googleusercontent.com">
+
+</head>
+<body>
+	<div class="login-page">
+			  <div class="form">
+				  <input type="text" id="username" placeholder="username"/>
+				  <input type="password" id="password" placeholder="password"/>
+				  <input type="submit" id="submit-btn" value="Login"/>
+
+
+				  <div id='message'></div>
+				  <p class="message">Not registered? <a href="/create-user">Create an account</a></p>
+				  <br/>
+				  				    <div id="my-signin2"></div>
+			  </div>
+			</div>
+<script type="text/javascript" >
+	var url="localhost:8080";
+	var submit_btn=document.getElementById('submit-btn');
+	submit_btn.onclick=function(){
+	  var request=new XMLHttpRequest();
+	  request.onreadystatechange=function(){
+	  var m=document.getElementById('message');
+		if(request.readyState === XMLHttpRequest.DONE){
+		  if(request.status === 200){
+			console.log('User logged in');
+			m.innerHTML="<style>#message{color: green; font-size:13px; font-weight:bold;</style>Logging in...";
+		  }
+		  else if(request.status===403){	
+			console.log("no entry");
+			m.innerHTML="<style>#message{color: red; font-size:13px;</style>Username/password is incorrect!";
+		  }
+		  
+		  else if(request.status===500){
+			alert('Something went wrong!');	
+			console.log("Wrong");
+		  }
+		}
+	  }
+  
+	  var username=document.getElementById('username').value;
+	  var password=document.getElementById('password').value;
+	  console.log(username);
+	  console.log(password);
+	  request.open('POST',"/login",true);
+	  request.setRequestHeader('Content-Type','application/json');
+	  request.send(JSON.stringify({username:username,password:password}));
+	};
+</script>
+
+  <script>
+    function onSuccess(googleUser) {
+      console.log('Logged in as: ' + googleUser.getBasicProfile().getName());
+	   var profile = googleUser.getBasicProfile();
+  console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+  console.log('Name: ' + profile.getName());
+  console.log('Image URL: ' + profile.getImageUrl());
+  console.log('Email: ' + profile.getEmail());
+    }
+    function onFailure(error) {
+      console.log(error);
+    }
+    function renderButton() {
+      gapi.signin2.render('my-signin2', {
+        'scope': 'profile email',
+        'width': 270,
+        'height': 50,
+        'longtitle': true,
+        'theme': 'dark',
+        'onsuccess': onSuccess,
+        'onfailure': onFailure
+      });
+    }
+  </script>
+
+  <script src="https://apis.google.com/js/platform.js?onload=renderButton" async defer></script>
+</body>
+</html>

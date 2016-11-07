@@ -1,3 +1,5 @@
+//process.env.DB_PASSWORD
+
 var express = require('express');
 var morgan = require('morgan');
 var path = require('path');
@@ -8,7 +10,7 @@ var config={
     database:"anu-asok",
     host:"db.imad.hasura-app.io",
     port:"5432",
-    password: process.env.DB_PASSWORD
+    password: "db-anu-asok-20933"
 };
 var app = express();
 app.use(morgan('combined'));
@@ -70,7 +72,7 @@ function create_template(data){
 					}
 				  }
 				}
-        request.open('GET',"http://anu-asok.imad.hasura-app.io/articles-counter/${title}",true);
+        request.open('GET',"http://localhost:8080/articles-counter/${title}",true);
         request.send(null);
 		};
 		</script>
@@ -80,14 +82,25 @@ function create_template(data){
     return htmltemplate;
 }
 
+app.get('/test', function (req, res) {
+  res.sendFile(path.join(__dirname, 'ui', 'test.html'));
+});
+
 app.get('/', function (req, res) {
   res.sendFile(path.join(__dirname, 'ui', 'index.html'));
 });
 
+app.get('/login',function(req,res){
+  res.sendFile(path.join(__dirname, 'ui', 'login.html'));	
+});
+
+app.get('/create-user',function(req,res){
+  res.sendFile(path.join(__dirname, 'ui', 'create-user.html'));	
+});
 
 function hash(input,salt){
 	var hashed=crypto.pbkdf2Sync(input,salt,10000,512,'sha512')
-	return hashed.toString('hex');
+	return ['pbkdf2','10000',salt,hashed.toString('hex')].join('$');
 }
 
 app.get('/hash/:input',function(req,res){
@@ -101,31 +114,34 @@ app.get('/counter',function(req,res){
 	res.send(counter.toString());
 });
 
+app.post('/create-user', function (req, res) {
+   // username, password
+   // {"username": "tanmai", "password": "password"}
+   // JSON
+   var username = req.body.username;
+   var password = req.body.password;
+      var name = req.body.name;
 
-app.post('/create-user',function(req,res){
-	var username=req.body.username;
-	var password1=req.body.password;
-	var salt=crypto.randomBytes(128).toString('hex');
-	var dbString=hash(password1,salt);
-	pool.query('INSERT INTO "user" (username,password) VALUES($1,$2)',[username,dbString],function(err,result){
-		if(err){
-			res.status(500).send(err.toString());
-		}
-		else{
-			res.send('User successfully created: '+ username);
-		}
-	});
+   var salt = crypto.randomBytes(128).toString('hex');
+   var dbString = hash(password, salt);
+   pool.query('INSERT INTO "user" (name, username, password) VALUES ($1, $2, $3)', [name, username, dbString], function (err, result) {
+      if (err) {
+          res.status(500).send(err.toString());
+      } else {
+          res.send('User successfully created: ' + username);
+      }
+   });
 });
 
 app.post('/login',function(req,res){
-	var username='dhoom';
-	var password1='1234dhoo';
+	var username=req.body.username;
+	var password1=req.body.password;
 	pool.query('SELECT * FROM "user" WHERE username=$1',[username],function(err,result){
 		if(err){
 			res.status(500).send(err.toString());
 		}
 		else{
-			if(result.rows.length === 0){
+			if(result.rows.length == 0){
 				res.status(403).send('Username Invalid:'+username);
 			}
 			else{
@@ -136,7 +152,7 @@ app.post('/login',function(req,res){
 					res.send('Correct credentials');			
 				}
 				else{
-					res.send('Incorrect password');
+					res.status(500);
 				}
 			}
 		}
@@ -149,6 +165,10 @@ app.get('/icon',function(req,res){
 
 app.get('/ui/main.js',function(req,res){
 	res.sendFile(path.join(__dirname,'ui','main.js'));
+});
+
+app.get('/blog.png',function(req,res){
+	res.sendFile(path.join(__dirname,'ui','blogger.png'));
 });
 
 var names=[];
@@ -173,12 +193,13 @@ app.get('/test-db',function(req,res){
 
 app.get('/articles-counter/:title',function(req,res){
 	var title=req.params.title;
+	 
     pool.query("SELECT likes FROM articles WHERE title='"+title+"'",function(err,result){
        res.send(JSON.stringify(result.rows[0].likes));
     });
 	pool.query("UPDATE articles SET likes=likes+1 WHERE title='"+title+"'",function(err,result){
-			//res.send("");
-	});  
+				//res.send("");
+		});   
 });
 		
 
@@ -200,6 +221,14 @@ app.get('/articles/:articleName',function(req,res){
 
 app.get('/ui/style.css', function (req, res) {
   res.sendFile(path.join(__dirname, 'ui', 'style.css'));
+});
+
+app.get('/ui/login.css', function (req, res) {
+  res.sendFile(path.join(__dirname, 'ui', 'login.css'));
+});
+
+app.get('/ui/search.png', function (req, res) {
+  res.sendFile(path.join(__dirname, 'ui', 'search.png'));
 });
 
 app.get('/ui/madi.png', function (req, res) {

@@ -1,0 +1,46 @@
+ body{
+	max-width:800px;
+	margin: 0 auto;
+	margin-left:20px;
+	margin-right:20px;
+	margin-top: 50px;
+	margin-bottom:60px;
+	background-image: url("bg.gif");
+    font-family:serif;
+ }
+ #textarea{
+	min-height:300px;
+ }
+
+.input {
+	margin-top: 1em;
+	padding: 0.85em 0.15em;
+	max-width: 100px;
+	background: transparent;
+	color: #595F6E;
+	padding: 0.8em;
+	width: 100%;
+	border: none;
+	border-radius: 5px;
+	background: white;
+	color: #aaa;
+	font-weight: bold;
+}
+
+#title{
+	max-width:720px;
+}
+
+#heading{
+	max-width:692px;
+}
+
+.button{	
+			font-size:15px;
+			margin-top:10px;
+            background: rgb(200,230,230); /* this is a light blue */
+			 border-radius: 10px;
+            text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+			margin-bottom:10px;
+        }
+

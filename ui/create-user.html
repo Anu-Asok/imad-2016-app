@@ -1,53 +1,59 @@
 <html>
-<head>
-<title>Login</title>
-<link rel="stylesheet" href="/ui/login.css"/>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
-</head>
-<body>
-
-<div class="login-page">
-  <div class="form">
-  				  <input type="text" id="name" placeholder="name"/>			  
-
-      <input type="text" id="username" placeholder="username"/>
-	  <input type="password" id="password" placeholder="password"/>
-	  <input type="submit" id="submit-btn"/>
-      <p class="message">Already registered? <a href="/login">Sign In</a></p>
-  </div>
-</div>
-<script type="text/javascript">
-	var url="localhost:8080";
-	var submit_btn=document.getElementById('submit-btn');
-	submit_btn.onclick=function(){
-	  var request=new XMLHttpRequest();
-	  request.onreadystatechange=function(){
-		if(request.readyState === XMLHttpRequest.DONE){
-		  if(request.status === 200){
-			console.log('User created!!');
-			alert('User successfully created');
-		  }
-		  else if(request.status===403){
-			alert('Username/password is incorrect');	
-			console.log("no entry");
-		  }
-		  
-		  else if(request.status===500){
-			alert('Username already exists!');	
-			console.log("Wrong");
-		  }
+	<head>
+		<title>Blog | Sign up</title>
+		<link rel="stylesheet" href="/ui/login.css"/>
+		<link rel="shortcut icon" href="/ui/blog.png">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+	</head>
+	<body>
+	<div class="login-page">
+		<div class="form">
+			<input type="text" id="name" placeholder="name"/>			  
+			<input type="text" id="username" placeholder="username"/>
+			<input type="password" id="password" placeholder="password"/>
+			<input type="submit" id="submit-btn"/>
+			<div id='message'></div>		  
+			<p class="message">Already registered? <a href="/login">Sign In</a></p>
+		</div>
+	</div>
+	<script type="text/javascript">
+		function Redirect(){
+			window.location="/login";
 		}
-	  }	  
-	  var name=document.getElementById('name').value;	
-	  var username=document.getElementById('username').value;
-	  var password=document.getElementById('password').value;
-	  console.log(username);
-	  console.log(password);
-	  request.open('POST',"/create-user",true);
-	  request.setRequestHeader('Content-Type','application/json');
-      request.send(JSON.stringify({name:name, username: username, password: password}));  
-	};
-</script>
+		var submit_btn=document.getElementById('submit-btn');
+		submit_btn.onclick=function(){			  			  
+			var request=new XMLHttpRequest();
+			request.onreadystatechange=function(){
+				if(request.readyState === XMLHttpRequest.DONE){
+					if(request.status === 200){						
+						m.innerHTML="<style>#message{color: green; font-size:13px; font-weight:bold;</style>User Created!";			  
+						Redirect();
+					}
+					else if(request.status===500){
+						m.innerHTML="<style>#message{color: red; font-size:13px; font-weight:bold;</style>Username already exists";
+					}
+				}
+			}	  
+			var name=document.getElementById('name').value;	
+			var username=document.getElementById('username').value;
+			var password=document.getElementById('password').value;
+			if (name == null || name == "") {
+				alert("name must be filled out");
+			}
+			else if(username == null || username == ""){
+				alert("username must be filled out");			  
+			}
+			else if(password == null || password == ""){
+				alert("password must be filled out");			  
+			}
+			else{
+				var m=document.getElementById('message');
+				m.innerHTML="<style>#message{color: blue; font-size:13px; font-weight:bold;</style>Registering...";
+				request.open('POST',"/create-user",true);
+				request.setRequestHeader('Content-Type','application/json');
+				request.send(JSON.stringify({name:name, username: username, password: password}));  
+			}
+		};
+	</script>
 </body>
 </html>

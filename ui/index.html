@@ -1,56 +1,88 @@
 <!doctype html>
 <html>
+
     <head>
         <link href="/ui/style.css" rel="stylesheet" />
-        <link rel="shortcut icon" href="icon">
-        <title>Anon ASP Tips</title>
+        <link href="/ui/blog.png" rel="shortcut icon">
+        <title>Blog</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
-    </head>
-    <body>
-	<a href="/login">Login</a>
-	<a href="/create-user">Register</a>
-	<input type="text" name="search" placeholder="Search..">
-
+	</head>
 	
-        <div class="center text-big bold">
-            <div id="change">
-              <h1>MR. ROBOT</h1>
-            </div>
-	    	<hr/><br/>
-		
-							
-		    <div class="center">
-                <img src="/ui/madi.png" class="img-medium"/>
-            </div>
-            <br/>
-		    <div>
-			    <a target="_blank" href="https://en.wikipedia.org/wiki/Mr._Robot_(TV_series)"><div id="change">Mr. Robot</div></a> is an American drama–thriller television series created by Sam Esmail. It stars Rami Malek as Elliot Alderson, a cybersecurity engineer and hacker who suffers from social anxiety disorder and clinical depression. Alderson is recruited by an insurrectionary anarchist known as "Mr. Robot", played by Christian Slater, to join a group of hacktivists. The group aims to erase all debts by attacking the large corporation E Corp.
-    		</div>
-    		<div class="footer">
+	<body>	
+	<ul class="nav_bar">
+	  <li><a class="active nav" href="/">Home</a></li>
+	  <li><a class="nav" href="#news">Articles</a></li>
+	  <li><a class="nav" href="#contact">Blog-Post</a></li>
+	  <li ><a class="nav" href="/post">Post</a></li>
+	  <li class="nav" style="float:right"><div id="check-login"><a href="/login">Login</a></div></li>
 
-    		</div>
-	   	</div>
-		<br/>
-		<div class="Description">
-			<h3>Cast</h3>
-			<ul>
-				<li>Rami Malek as Elliot Alderson</li>
-				<li>Christian Slater as Mr. Robot</li>
-			</ul>
-        </div>
-
-      <div class="footer">
-        This button<button id="click">Like This?</button> has been clicked <span id="count">0</span> times
-      </div>
-      <input type="text" id="name" placeholder="name">
-      <input type="submit" value="Submit" id="submit_btn">
-      <ul id="namelist">
-      
-      </ul>
-	<script type="text/javascript" src="/ui/main.js">
-		
+	</ul>
+	<br/>
+	
+	<div id="loader">
+		<div id="gif">
+			<img src="/ui/squares.gif"/>
+		</div>
+	</div>
+	<br/>
+	<div id="footer"></div>
+	
+	
+	<script type="text/javascript">
+		var loadby5=0;
+		function check_login(){		
+			var request=new XMLHttpRequest();		
+			request.onreadystatechange=function(){
+				if(request.status === 200){
+						var div=document.getElementById('check-login');					
+						div.innerHTML="<a href=\"/logout\">Logout</a>";
+					}
+			}
+			request.open('GET',"/check-login",true);
+			request.send(null);		
+		}	
+		check_login();
+		function loader(){		
+			var request=new XMLHttpRequest();		
+			request.onreadystatechange=function(){
+				if(request.readyState === XMLHttpRequest.DONE){
+					if(request.status === 200){
+					
+					if(!(request.responseText).localeCompare("No articles found"))
+					document.getElementById('footer').innerHTML="<p id=\"no-article\">No more articles</p>";
+					
+						var div=document.getElementById('loader');					
+						var comment=JSON.parse(request.responseText);	
+						if(loadby5===1)
+							var x='';														
+						else
+							var x=div.innerHTML;											
+						for (i = 0; i < comment.length; i++) { 
+						var time = new Date(comment[i].timestamp);
+						x += "<div class=\"loader\"><div style=\"font-size:30px;font: normal normal 24px Times, Times New Roman, serif;\"><a href=\""+"\\articles\\"+comment[i].title+ "\">"+comment[i].heading+"</a></div>"+comment[i].content +"Likes: "+ comment[i].likes+"<br/><hr/>" +  "<em>Author: "+comment[i].name +' - '+ time.toLocaleTimeString() +" on "+ time.toLocaleDateString()+"<br/></div></em>";
+						}
+						div.innerHTML=x.toString();														
+					document.getElementById('footer').innerHTML="<br/><button class=\"button\" id=\"load\" onclick=\"loader();\">Load More</button>";
+					
+					}					
+				}				
+			}
+			
+			request.open('GET',"/get-article/"+loadby5,true);
+			request.send(null);		
+			loadby5+=1;
+		}		
+		loader();
 	</script>
-
+	
     </body>
-
+	
 </html>
+
+
+
+
+
+
+
+

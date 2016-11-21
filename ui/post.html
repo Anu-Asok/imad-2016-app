@@ -1,0 +1,92 @@
+<!doctype html>
+<html>
+    <head>	
+		<link href="/ui/style.css" rel="stylesheet"/>
+		<link href="/ui/blog.png" rel="shortcut icon"/>
+        <title>Blog | Post</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+		<script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
+		<script>tinymce.init({ selector:'textarea' });</script>
+	</head>
+	
+	<body class="index">
+		<ul class="nav_bar">
+			<li><a class="nav" href="/">Home</a></li>
+			<li><a class="nav" href="#news">Articles</a></li>
+			<li><a class="nav" href="#contact">Blog-Post</a></li>
+			<li ><a class=" active nav" href="/post">Post</a></li>
+			<li class="nav" style="float:right"><div id="check-login"><a href="/login">Login</a></div></li>
+			<li class="nav" style="float:right"><a href="/user">Profile</a></li>
+
+		</ul>
+		<br/>		
+		<div id="info">
+			Title : <input type ="text" id="title" class="input" placeholder="title"/>
+			<br/><br/>
+			Heading : <input type ="text" id="heading" class ="input" placeholder="heading" />
+			<br/><br/>
+			<br/><br/>
+		</div>
+		<textarea id="textarea" >Write articles here...</textarea>
+		<br/>
+		<button id="submit_article" class="button">Post article</button>		
+		<script type="text/javascript" >
+		
+			function check_login(){		
+				var request=new XMLHttpRequest();		
+				request.onreadystatechange=function(){
+					if(request.status === 200){
+						var div=document.getElementById('check-login');					
+						div.innerHTML="<a href=\"/logout\">Logout</a>";
+					}
+				}
+				request.open('GET',"/check-login",true);
+				request.send(null);		
+			}	
+			check_login();
+			
+			var x=document.getElementById('submit_article');
+			x.onclick=function(){
+				var article=tinymce.get('textarea').getContent();
+				var title=document.getElementById('title').value;
+				var heading=document.getElementById('heading').value;
+				var request=new XMLHttpRequest();				
+				request.onreadystatechange=function(){
+					if(request.readyState === XMLHttpRequest.DONE){				
+						if(request.status===500){						
+							alert('Article with the same title already exists!');	
+							var post=document.getElementById('submit_article');
+							post.innerHTML="Post article";
+						}
+						else if(request.status===200){				  
+							alert('Article Submitted!');
+							window.location="/";
+						}
+					}
+					else if(request.status===403){
+						alert('Login to post articles');
+						var post=document.getElementById('submit_article');
+						post.innerHTML="Post article";
+					}
+				}
+				if (title == null || title == "") {
+					alert("Title cannot be empty!");
+				}
+				else if (heading == null || heading == "") {
+					alert("Heading cannot be empty!");
+				}
+				else if (article == null || article == "") {
+					alert("Article cannot be empty!");
+				}
+				else{
+					var post=document.getElementById('submit_article');
+					post.innerHTML="Submitting...";
+					request.open('POST',"/submit-article",true);
+					request.setRequestHeader('Content-Type','application/json');
+					request.send(JSON.stringify({title:title,heading:heading,article:article}));
+				}				
+			};
+			
+		</script>
+	</body>
+</html>

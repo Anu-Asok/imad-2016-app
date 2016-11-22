@@ -3,6 +3,17 @@
 #gif{		/*css for loader*/
 text-align:center;
 padding-top:200px;
+
+}
+
+#no-article{
+	text-align:center;
+  font-family: "Roboto", sans-serif;
+	font-weight:bold;
+  }
+#load{
+	margin:0 auto;
+	margin-left:20px;
 }
 
 .loader{	/*css for article box*/
@@ -16,16 +27,17 @@ padding-top:200px;
     margin-bottom: 18px;
 	margin-left:20px;
 	margin-right:20px;
-	font-family:serif;
-    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+	font-family:calibri;
+    box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.2), 0 6px 13px 0 rgba(0, 0, 0, 0.24);
 }
- body{
+.index{
 	max-width:800px;
 	margin: 0 auto;	
 	margin-top: 50px;
 	margin-bottom:60px;
 	background-image: url("bg.png");
     font-family:serif;
+	
  }
  
  #textarea{		/*css for textarea*/
@@ -79,17 +91,20 @@ padding-top:200px;
 }
 
 
-ul {
+.nav_bar{
 	max-width:740px;
     list-style-type: none;
     margin: 0 auto;
     padding: 0;
+	margin-left:20px;
+	margin-right:20px;
+	margin-bottom:32px;
     overflow: hidden;
     border: 1px solid #e7e7e7;
     background-color: #f3f3f3;
 }
 
-li {
+.nav{
     float: left;
 }
 
@@ -103,6 +118,15 @@ li a {
 
 li a:hover:not(.active) {
     background-color: #ddd;
+}
+
+a:link{
+		text-decoration:none;
+		color:#4d469c;
+}
+a:hover {
+    text-decoration: underline;
+    cursor: auto;
 }
 
 li a.active {

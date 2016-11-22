@@ -8,13 +8,14 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 	</head>
 	
-	<body>	
+	<body class="index">	
 	<ul class="nav_bar">
 	  <li><a class="active nav" href="/">Home</a></li>
 	  <li><a class="nav" href="#news">Articles</a></li>
 	  <li><a class="nav" href="#contact">Blog-Post</a></li>
 	  <li ><a class="nav" href="/post">Post</a></li>
 	  <li class="nav" style="float:right"><div id="check-login"><a href="/login">Login</a></div></li>
+	  <li class="nav" style="float:right"><a href="/user">Profile</a></li>
 
 	</ul>
 	<br/>
@@ -43,13 +44,14 @@
 		}	
 		check_login();
 		function loader(){		
-			var request=new XMLHttpRequest();		
+			var request=new XMLHttpRequest();
+			if(loadby5!=0)
+				document.getElementById('footer').innerHTML="<br/><button class=\"button\" id=\"load\" onclick=\"loader();\">Loading...</button>";
 			request.onreadystatechange=function(){
 				if(request.readyState === XMLHttpRequest.DONE){
-					if(request.status === 200){
-					
+					if(request.status === 200){					
 					if(!(request.responseText).localeCompare("No articles found"))
-					document.getElementById('footer').innerHTML="<p id=\"no-article\">No more articles</p>";
+					document.getElementById('footer').innerHTML="<p id=\"no-article\">No more Posts</p>";
 					
 						var div=document.getElementById('loader');					
 						var comment=JSON.parse(request.responseText);	

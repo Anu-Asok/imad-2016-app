@@ -1,42 +1,49 @@
 <!doctype html>
 <html>
+<head>
+	<link href="/ui/style.css" rel="stylesheet" />
+	<link href="/ui/blog.png" rel="shortcut icon">
+	<title>Blog</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<input type="checkbox" id="sidebartoggler" name="" value="" />
+<div class="page-wrap">
+  <label for="sidebartoggler" class="toggle">â˜°<img src="/ui/blog.png" style="width: 24px;
+    padding-left: 29px;"><div class="main_title">Anupam Asok's Blog</div></label>
 
-    <head>
-        <link href="/ui/style.css" rel="stylesheet" />
-        <link href="/ui/blog.png" rel="shortcut icon">
-        <title>Blog</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-	</head>
-	
-	<body class="index">	
-	<ul class="nav_bar">
-	  <li><a class="active nav" href="/">Home</a></li>
-	  <li><a class="nav" href="#news">Articles</a></li>
-	  <li><a class="nav" href="#contact">Blog-Post</a></li>
-	  <li ><a class="nav" href="/post">Post</a></li>
-	  <li class="nav" style="float:right"><div id="check-login"><a href="/login">Login</a></div></li>
-	  <li class="nav" style="float:right"><a href="/user">Profile</a></li>
 
-	</ul>
-	<br/>
-	
-	<div id="loader">
+  <div class="page-content" style="padding-left:10px;">
+	<div id="loader" class="index" >
 		<div id="gif">
-			<img src="/ui/squares.gif"/>
+			<div id="loading"></div>
 		</div>
 	</div>
-	<br/>
 	<div id="footer"></div>
-	
-	
-	<script type="text/javascript">
+	<div id="credit"></div>
+  </div>
+  
+ 
+
+  <div class="sidebar">
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/about-me">About me</a></li>
+	  <li><a href="/user">Profile</a></li>
+	  <li><a href="/edit-profile">Edit Profile</a></li>
+	   <div id="check-login"><li><a href="/login">Login</a></li></div>
+    </ul>
+  </div>
+  
+</div>
+<script type="text/javascript">
 		var loadby5=0;
 		function check_login(){		
 			var request=new XMLHttpRequest();		
 			request.onreadystatechange=function(){
 				if(request.status === 200){
 						var div=document.getElementById('check-login');					
-						div.innerHTML="<a href=\"/logout\">Logout</a>";
+						div.innerHTML="<li><a href=\"/logout\">Logout</a></li>";
 					}
 			}
 			request.open('GET',"/check-login",true);
@@ -44,6 +51,7 @@
 		}	
 		check_login();
 		function loader(){		
+			
 			var request=new XMLHttpRequest();
 			if(loadby5!=0)
 				document.getElementById('footer').innerHTML="<br/><button class=\"button\" id=\"load\" onclick=\"loader();\">Loading...</button>";
@@ -61,10 +69,11 @@
 							var x=div.innerHTML;											
 						for (i = 0; i < comment.length; i++) { 
 						var time = new Date(comment[i].timestamp);
-						x += "<div class=\"loader\"><div style=\"font-size:30px;font: normal normal 24px Times, Times New Roman, serif;\"><a href=\""+"\\articles\\"+comment[i].title+ "\">"+comment[i].heading+"</a></div>"+comment[i].content +"Likes: "+ comment[i].likes+"<br/><hr/>" +  "<em>Author: "+comment[i].name +' - '+ time.toLocaleTimeString() +" on "+ time.toLocaleDateString()+"<br/></div></em>";
+						x += "<div class=\"loader\"><div style=\"font-size:30px;\"><a href=\""+"\\articles\\"+comment[i].title+ "\">"+comment[i].heading+"</a></div>"+comment[i].content +"<hr/>" + "<div style=\"font-size:15px;\">Likes: "+ comment[i].likes+ " &nbsp&nbsp&nbspðŸ“… "+ time.toLocaleTimeString() +" on "+ time.toLocaleDateString()+"</div></div>";
 						}
 						div.innerHTML=x.toString();														
 					document.getElementById('footer').innerHTML="<br/><button class=\"button\" id=\"load\" onclick=\"loader();\">Load More</button>";
+					document.getElementById('credit').innerHTML="Made  with  â™¥  by  Anupam  Asok";
 					
 					}					
 				}				
@@ -76,15 +85,5 @@
 		}		
 		loader();
 	</script>
-	
-    </body>
-	
+</body>
 </html>
-
-
-
-
-
-
-
-

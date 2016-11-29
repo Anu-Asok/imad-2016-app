@@ -9,7 +9,7 @@
 <body>
 <input type="checkbox" id="sidebartoggler" name="" value="" />
 <div class="page-wrap">
-  <label for="sidebartoggler" class="toggle">â˜°<img src="/ui/blog.png" style="width: 24px;
+  <label for="sidebartoggler" class="toggle">☰<img src="/ui/blog.png" style="width: 24px;
     padding-left: 29px;"><div class="main_title">Anupam Asok's Blog</div></label>
 
 
@@ -69,11 +69,11 @@
 							var x=div.innerHTML;											
 						for (i = 0; i < comment.length; i++) { 
 						var time = new Date(comment[i].timestamp);
-						x += "<div class=\"loader\"><div style=\"font-size:30px;\"><a href=\""+"\\articles\\"+comment[i].title+ "\">"+comment[i].heading+"</a></div>"+comment[i].content +"<hr/>" + "<div style=\"font-size:15px;\">Likes: "+ comment[i].likes+ " &nbsp&nbsp&nbspðŸ“… "+ time.toLocaleTimeString() +" on "+ time.toLocaleDateString()+"</div></div>";
+						x += "<div class=\"loader\"><div style=\"font-size:30px;\"><a href=\""+"\\articles\\"+comment[i].title+ "\">"+comment[i].heading+"</a></div>"+comment[i].content +"<hr/>" + "<div style=\"font-size:15px;\">Likes: "+ comment[i].likes+ " &nbsp&nbsp&nbsp📅 "+ time.toLocaleTimeString() +" on "+ time.toLocaleDateString()+"</div></div>";
 						}
 						div.innerHTML=x.toString();														
 					document.getElementById('footer').innerHTML="<br/><button class=\"button\" id=\"load\" onclick=\"loader();\">Load More</button>";
-					document.getElementById('credit').innerHTML="Made  with  â™¥  by  Anupam  Asok";
+					document.getElementById('credit').innerHTML="Made  with  ♥  by  Anupam  Asok";
 					
 					}					
 				}				

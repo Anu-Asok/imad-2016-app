@@ -4,6 +4,7 @@
 		<link rel="shortcut icon" href="/ui/blog.png">
 		<link rel="stylesheet" href="/ui/login.css"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
+		
 	</head>	
 <body>
 	<div class="login-page">
@@ -18,8 +19,15 @@
 	</div>	
 	<script type="text/javascript" >		
 		function Redirect(){
-			window.location="/";
-		}		
+			if(document.referrer==="http://localhost:8080/create-user")
+				window.location="/";	
+			else if(document.referrer==="http://localhost:8080/logout")
+				window.location="/";
+			else if(document.referrer==="http://localhost:8080/login")
+				window.location="/";
+			else
+				window.location=document.referrer;
+		}
 		var submit_btn=document.getElementById('submit-btn');
 		submit_btn.onclick=function(){
 			var request=new XMLHttpRequest();
@@ -42,8 +50,6 @@
 			}	  
 			var username=document.getElementById('username').value;
 			var password=document.getElementById('password').value;
-			console.log(username);
-			console.log(password);
 			request.open('POST',"/login",true);
 			request.setRequestHeader('Content-Type','application/json');
 			request.send(JSON.stringify({username:username,password:password}));

@@ -1,5 +1,3 @@
-//process.env.DB_PASSWORD
-
 var express = require('express');
 var morgan = require('morgan');
 var path = require('path');
@@ -11,7 +9,7 @@ var config={
     database:"anu-asok",
     host:"db.imad.hasura-app.io",
     port:"5432",
-    password: "db-anu-asok-20933"
+    password: process.env.DB_PASSWORD
 };
 var pool=new Pool(config);
 
@@ -43,66 +41,97 @@ function create_template(data,name){
 		<link rel="stylesheet" href="/ui/style.css"/>
 		<link rel="stylesheet" href="/ui/comment.css"/>
         <meta name='viewport' content='width=device-width,initial-scale=1'/>
+		<link href="https://fonts.googleapis.com/css?family=Pompiere" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css?family=Patrick+Hand+SC" rel="stylesheet">
+
     </head>
+	<style>
+		body{			
+			background:url(/ui/rain1.jpg);			
+		}		
+		h1{
+			font-family:'Patrick Hand SC';
+		}
+		#content{
+			margin:0;
+			margin-top:30px;
+			font-family:Pompiere;
+			font-size:23px;
+		}
+		.footer {
+			font-family:'Patrick Hand SC';
+			font-size:18px;
+		}
+		#likes{
+			background-color:white;
+			color:#009ed8;
+		}
+		
+	</style>
     <body>
-		<ul class="nav_bar">
-			<li><a class="nav" href="/">Home</a></li>
-			<li><a class="nav" href="#news">Articles</a></li>
-			<li><a class="nav" href="#contact">Blog-Post</a></li>
-			<li ><a class="nav" href="/post">Post</a></li>
-			<li class="nav" style="float:right"><a href="/login"><div id="lol">Login</div></a></li>
-			<li class="nav" style="float:right"><a href="/user">Profile</a></li>
-		</ul>	
-		<div class="container">
+	<input type="checkbox" id="sidebartoggler" name="" value="" />
+<div class="page-wrap">
+  <label for="sidebartoggler" class="toggle">☰<img src="/ui/blog.png" style="width: 24px;
+    padding-left: 29px;"><div class="main_title">Anupam Asok's Blog</div></label>
+
+
+  <div class="page-content" style="padding-left:10px;">
+	<div class="container">
 		<div class="article">
-			<h2>
+			<h1>
 				${heading}
-			</h2>
+			</h1>
+			<div id="author_details">
+			</div>
 			<hr/>
-			<div>
+			<div id="content">
 				${content}
 			</div>
 			<br/>
 			<hr/>
-			<div id="author_details">
-			</div>
+			
 			<div class="footer">
 				<br/>
-				<button id="likes" class="button"><div id="check">Click here to like</div></button> <span id="like">${counter}</span> <span id="person"> Users</span> liked this article.
+				<button id="likes" class="button"><div id="check">Like this ? ♥ </div></button> <span id="like">►${counter}</span> <span id="person"> users</span> liked this article.
 			</div>
 			<br/>
 		</div>
 		<br/>
-		<textarea id="comment" rows="5" cols="110" placeholder="Add a comment..." style='width:100%'></textarea>
+		<textarea id="comment" rows="5" cols="110" placeholder="Add a comment..." class="input comment-box" style='width:100%'></textarea>
 		<br/>
 		<input type="submit" id="submit-cmt" value="Post comment" class="button"/>
 		<br/>
-		<div id="show-comment">
-			<div id="gif">
-				<img src="/ui/squares.gif"/>
-			</div>
+		<div id="show-comment">			
 		</div>
+		<div id="credit" style="background:none;">Made  with  ♥  by  Anupam  Asok</div>
 		</div>
-		<script type="text/javascript" >
+
+  </div>
+  
+  <!--end page-content-->
+
+<!--Put .sidebar at bottom of webpage content, before </body>-->
+
+  <div class="sidebar">
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/about-me">About me</a></li>
+	  <li><a href="/user">Profile</a></li>
+	  <li><a href="/edit-profile">Edit Profile</a></li>
+	   <div id="check-login"><li><a href="/login">Login</a></li></div>
+    </ul>
+  </div><!--end sidebar-->
+  
+</div>
+<script type="text/javascript" src="/ui/main.js"></script>
+				<script type="text/javascript" >
 		if(parseInt(${counter})==1){
 			var person=document.getElementById('person');
-			person.innerHTML="User";
+			person.innerHTML="user";
 		}
-		function check_login(){		
-			var request=new XMLHttpRequest();		
-			request.onreadystatechange=function(){
-				if(request.status === 200){
-						var div=document.getElementById('lol');					
-						div.innerHTML="Logout";
-					}
-			}
-			request.open('GET',"/check-login",true);
-			request.send(null);		
-		}	
-		check_login();
 		var time1 = new Date("${timestamp}");
 		var p=document.getElementById('author_details');
-		p.innerHTML="Posted by "+"${author}"+" at "+ time1.toLocaleTimeString() + " , "+ time1.toLocaleDateString();
+		p.innerHTML=" 📅 "+ time1.toLocaleTimeString() + " , "+ time1.toLocaleDateString();
 		var button = document.getElementById('likes');
 		button.onclick=function(){
 			var check=document.getElementById('check');
@@ -117,7 +146,7 @@ function create_template(data,name){
 					else{
 						if(request.status === 403){
 							alert("Login to like the article!");
-							check.innerHTML="Click here to like";
+							check.innerHTML="Like this ? ♥ ";
 						}
 						else{
 							var counter=parseInt(request.responseText)+1;
@@ -126,10 +155,10 @@ function create_template(data,name){
 							var person=document.getElementById('person');
 							check.innerHTML="You like this";
 							if(counter == 1){
-								person.innerHTML="User";
+								person.innerHTML="user";
 							}
 							else{
-								person.innerHTML="Users";
+								person.innerHTML="users";
 							}
 						}
 					}					
@@ -157,12 +186,14 @@ function create_template(data,name){
 		}
 		like_checker();
 		function comment1(){
+			var div=document.getElementById('show-comment');
+			div.innerHTML="Loading...";
 			var time = new Date();
 			var request=new XMLHttpRequest();		
 			request.onreadystatechange=function(){
 				if(request.readyState === XMLHttpRequest.DONE){
 					if(request.status === 200){
-						var div=document.getElementById('show-comment');
+						
 						
 						if((request.responseText).localeCompare("No comments found")){
 							var comment=JSON.parse(request.responseText);							
@@ -172,7 +203,7 @@ function create_template(data,name){
 							var usr=comment[comment.length-1]['usr'];							
 							for (i = 0; i < comment.length-1; i++) { 
 							var time = new Date(comment[i].timestamp);
-							x +=  beg +comment[i].comment + "<br/>" + usr+ "Comment by "+comment[i].name +' - '+ time.toLocaleTimeString() +" on "+ time.toLocaleDateString() + lst ;
+							x +=  beg +comment[i].comment + "<br/>" + usr+ 'Comment by <a href="/users/'+comment[i].user_id+'">'+comment[i].name +'</a> - '+ time.toLocaleTimeString() +" on "+ time.toLocaleDateString() + lst ;
 							}
 							div.innerHTML=x.toString();
 						}
@@ -229,6 +260,8 @@ app.get('/', function (req, res) {
   res.sendFile(path.join(__dirname, 'ui', 'index.html'));
 });
 
+
+
 app.get('/login',function(req,res){
   res.sendFile(path.join(__dirname, 'ui', 'login.html'));	
 });
@@ -248,10 +281,10 @@ app.get('/hash/:input',function(req,res){
 });
 
 app.get('/post',function(req,res){
-    if (req.session && req.session.auth && req.session.auth.userId)
+    if (req.session && req.session.auth && req.session.auth.userId && req.session.auth.userId==43)
 		res.sendFile(path.join(__dirname, 'ui', 'post.html'));	
 	else
-		res.sendFile(path.join(__dirname, 'ui', 'login.html'));	
+		res.send("You are not authorized to post articles!");	
 });
 
 app.post('/post-comment',function(req,res){
@@ -271,10 +304,6 @@ app.post('/post-comment',function(req,res){
 	}   
 });
 
-
-app.get('/comment',function(req,res){
-	res.sendFile(path.join(__dirname, 'ui', 'submit-comment.html'));		
-});
 app.get('/get-comment/:id',function(req,res){
 	var id=req.params.id;
 	pool.query("SELECT comment.* ,\"user\".name from \"comment\",\"user\" WHERE comment.user_id = \"user\".id AND comment.article_id=$1 ORDER BY comment.timestamp DESC",[id],function(err,result){
@@ -306,18 +335,23 @@ app.post('/create-user', function (req, res) {
       if (err) {
           res.status(500).send(err.toString());
       } else {
-          res.send('User successfully created: ' + username);
-		  
+		pool.query("select \"user\".id from \"user\" where username=$1",[username], function(err,result){
+			var id=result.rows[0].id;
+			pool.query("INSERT INTO \"userDetails\" (\"user_id\") VALUES ($1)",[id],function(err,result){
+				res.send('User successfully created: ' + username);
+			}); 
+		});		  
       }
    });
 });
+
 
 app.post('/submit-article', function (req, res) {
    var article = req.body.article;
    var heading = req.body.heading;
    var title = req.body.title;
-   if (req.session && req.session.auth && req.session.auth.userId) {
-	   pool.query("INSERT INTO \"article\" (title, heading,content,user_id) VALUES ($1, $2, $3, $4)",[title,heading,article,req.session.auth.userId], function (err, result) {
+   if (req.session && req.session.auth && req.session.auth.userId && req.session.auth.userId==43) {
+	   pool.query("INSERT INTO \"article\" (title, heading,content,user_id) VALUES ($1, $2, $3, $4)",[title,heading,article,43], function (err, result) {
 		  if (err) {
 			  res.status(500).send(err.toString());
 		  } else {
@@ -346,11 +380,11 @@ app.post('/login',function(req,res){
 				var salt=dbString.split('$')[2];
 				var hashedPassword=hash(password1,salt);
 				if(hashedPassword===dbString){
-                req.session.auth = {userId: result.rows[0].id};
+					req.session.auth = {userId: result.rows[0].id};
 					res.send('Correct credentials');
 				}
 				else{
-					res.status(500);
+					res.status(403).send("");
 				}
 			}
 		}
@@ -379,7 +413,7 @@ app.get('/logout', function (req, res) {
 
 app.get('/get-article/:i',function(req,res){
 	var i=req.params.i;
-	pool.query('select article.*,"user".name from article, "user" where article.user_id="user".id ORDER BY "timestamp" DESC LIMIT 2 OFFSET $1',[i*2],function(err,result){
+	pool.query('select article.*,"user".name from article, "user" where article.user_id="user".id ORDER BY "timestamp" DESC LIMIT 4 OFFSET $1',[i*4],function(err,result){
 		if(err){
 			res.status(500).send("Couldn't fetch the articles");
 		}
@@ -397,8 +431,7 @@ app.get('/articles-counter/:id',function(req,res){
     if (req.session && req.session.auth && req.session.auth.userId) {
 		var user_id=req.session.auth.userId;
 		pool.query("INSERT INTO \"like-checker\" (user_id,article_id) VALUES ($1,$2)",[user_id,article_id],function(err,result){
-			if (err){
-	
+			if (err){	
               res.send("Error");
             }
 			else{
@@ -451,143 +484,103 @@ app.get('/articles/:articleName',function(req,res){
     });
 });
 
-app.get('/ui/:filename',function(req,res){
-	var filename=req.params.filename;
-	res.sendFile(path.join(__dirname, 'ui', filename));
-});
-
 function userTemplate(data){
 	var template=`
 	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-		<link href="/ui/style.css" rel="stylesheet" />
-		<link href="/ui/blog.png" rel="shortcut icon">
-		<title>Blog</title>
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<title>One Page Resume</title>
-		<style type="text/css">
-			* { margin: 0; padding: 0; }
-			body { line-height: 24px;  }
-			.clear { clear: both; }
-			#page-wrap {  margin: 40px auto 60px; margin-left:5px; margin-right:5px;padding:20px;}        
-			h1 { margin: 0 0 16px 0; padding: 0 0 16px 0; font-family:Georgia; font-size: 42px; font-style: italic; }
-			h2 { font-size: 20px; margin: 0 0 6px 0; position: relative; }
-			h2 span { position: absolute; bottom: 0; right: 0; font-style: italic; font-family: Georgia, Serif; font-size: 16px; color: #999; font-weight: normal; }
-			p { margin: 11px 0 16px 0; }        
-			#objective { width: 700px; float: left; margin: 0 auto; text-align:justify;}
-			#objective p { font-family: Georgia, Serif; font-style: italic; color: #666; }
-			dt { font-style: italic; font-weight: bold; font-size: 18px; text-align: left; padding: 0 24px 0 0; width: 82px; float: left; height: 100px; border-right: 1px solid #999;  }
-			dd { margin-left:115px; font-size: 18px; text-align: justify; padding: 0 26px 0 10; width: 400px; }
-			dd.clear { float: none; margin: 0; height: 15px; }
-		</style>
-	</head>
-	<body class="index">	
-		<ul class="nav_bar">
-			<li><a class="nav" href="/">Home</a></li>
-			<li><a class="nav" href="#news">Articles</a></li>
-			<li><a class="nav" href="#contact">Blog-Post</a></li>
-			<li ><a class="nav" href="/post">Post</a></li>
-			<li class="nav" style="float:right"><div id="check-login"><a href="/login">Login</a></div></li>
-			<li class="nav" style="float:right"><a class="active" href="/">Profile</a></li>
-		</ul>
-		<div id="page-wrap">	
-			<a href="/edit-profile" style="float:right; margin-top:10px;">Edit Profile</a>
-			<h1>${data.name}</h1>			
-			<hr/>
-			<p>
-				Username: ${data.username}<br/>
-				Phone Number: ${data.phone_no}<br />
-				Email: <a href="mailto:${data.email}">${data.email}</a>
-			</p>
-			<div id="objective">
-				<p>
-				<b>About me</b>: ${data.description}
-				</p>
-			</div>
-			<div class="clear"></div>
-			<dl>
-				<dd class="clear"></dd>
-				<dt>Education</dt>
-				<dd>
-					${data.education}
-				</dd>
-				<dd class="clear"></dd>
-				<dt>Skills</dt>
-				<dd>
-					${data.skills}
-				</dd>
-				<dd class="clear"></dd>
-				<dt>Experience</dt>
-				<dd>
-					${data.experience}
-				</dd>
-				<dd class="clear"></dd>
-				<dt>Articles</dt>
-				<dd id="article">
-					No articles to show
-				</dd>
-				<dd class="clear"></dd>
-				<dt>Blog</dt>
-				<dd id="blog">
-					No blogs to show
-				</dd>
-				<dd class="clear"></dd>
-			</dl>
-			<div class="clear"></div>			
-		</div>
-	</body>
-	<script type="text/javascript">
-		function article(){
-			var request=new XMLHttpRequest();		
-			request.onreadystatechange=function(){
-				if(request.readyState === XMLHttpRequest.DONE){
-					if(request.status === 200){
-						var article=document.getElementById('article');
-						var x=JSON.parse(request.responseText);
-						var y='';						
-						var t='<a href="\\\\articles\\\\';	
-						var s='</a><br/>';
-						for(i=0;i<x['title'].length;i++){
-							y += t+x['title'][i]+'">'+x['title'][i]+s;
-						}
-						article.innerHTML=y;						
-					}
-				}
-			}
-			request.open('GET',"/article-title/"+${data.id},true);
-			request.send(null);			
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<link href="/ui/style.css" rel="stylesheet" />
+	<link href="/ui/blog.png" rel="shortcut icon">
+	<title>Blog</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>One Page Resume</title>
+	<style type="text/css">
+		@import url(https://fonts.googleapis.com/css?family=Rancho);
+		@import url(https://fonts.googleapis.com/css?family=Abel);
+		* { margin: 0; padding: 0; }
+		body { line-height: 31px;  }
+		.clear { clear: both; }
+		#page-wrap {  margin-left:5px; margin-right:14px;padding:20px;
+		padding: 34px;
+		background: whitesmoke;font-family: Abel;
+		box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);}        
+		#pro_title {margin: 0 0 16px 0;  padding: 21px 0 16px 0;   font-size: 45px;  word-wrap: break-word;
+		line-height: 35px;font-family: Rancho;}
+		p { margin: 11px 0 16px 0;  font-size: 21px;}        
+		dt { font-size: 26px; text-align: left; padding: 0 18px 0 0; width: 107px; float: left; height: 150px; border-right: 1px solid #999;  }
+		dd {  margin-left:129px; font-size: 20px; text-align: justify; padding: 0 18px 0 10; max-width: 570px; word-wrap: break-word;}
+		dd.clear { float: none; margin: 0; height: 15px; }
+		hr{
+		border-bottom: 1px solid #1f1209;
+		box-shadow: 0 20px 20px -20px #333;
 		}
-		article();
-		function check_login(){		
-			var request=new XMLHttpRequest();		
-			request.onreadystatechange=function(){
-				if(request.status === 200){
-						var div=document.getElementById('check-login');					
-						div.innerHTML='<a href=\"\\\logout\">Logout</a>';
-					}
+		a{
+		color:white;
+		}
+	</style>
+</head>
+<body>
+	<input type="checkbox" id="sidebartoggler" name="" value="" />
+	<div class="page-wrap">
+		<label for="sidebartoggler" class="toggle">☰<img src="/ui/blog.png" style="width: 24px;
+		padding-left: 29px;"><div class="main_title" style="padding-top:0px;">Anupam Asok's Blog</div></label>
+		<div class="page-content" style="padding-left:10px;">
+			<div class="index">
+				<div id="page-wrap">	
+					<div id="pro_title">${data.name}</div>			
+					<hr/>
+					<p>
+					<b>Username : </b>${data.username}<br/>
+					<b>Phone Number :</b> ${data.phone_no}<br />
+					<b>Email :</b> ${data.email}
+					</p>
+					<dd class="clear"></dd>
+					<dl>
+					<dd class="clear"></dd>
+					<dt>About me</dt>
+					<dd>
+					${data.about}
+					</dd>
+					<dd class="clear"></dd>			
+					</dl>
+					<div class="clear"></div>			
+				</div>
+			</div>
+			<div id="credit">Made  with  ♥  by  Anupam  Asok</div>
+		</div>
+		<div class="sidebar">
+			<ul>
+				<li><a href="/">Home</a></li>
+				<li><a href="/about-me">About me</a></li>
+				<li><a href="/user">Profile</a></li>
+				<li><a href="/edit-profile">Edit Profile</a></li>
+				<li id="check-login"><a href="/login">Login</a></li>
+			</ul>
+		</div>
+	</div>
+	<script type="text/javascript">
+	function check_login(){		
+		var request=new XMLHttpRequest();		
+		request.onreadystatechange=function(){
+			if(request.status === 200){
+				var div=document.getElementById('check-login');					
+				div.innerHTML='<a href=\"\\\logout\">Logout</a>';
 			}
-			request.open('GET',"/check-login",true);
-			request.send(null);		
-		}	
-		check_login();
+		}
+		request.open('GET',"/check-login",true);
+		request.send(null);		
+	}	
+	check_login();
 	</script>
+</body>
 </html>`;
 return template;
 }
-app.get('/article-title/:id',function(req,res){
-	var id=req.params.id;
-	pool.query("SELECT \"user\".id,  array_agg(article.title) as title from \"user\",\"article\" where \"user\".id=$1 and \"article\".user_id=$1 group by \"user\".id",[id],function(err,result){
-		if(err)
-			res.send(err);
-		else{
-			
-			res.send(JSON.stringify(result.rows[0]));
-		}
-	});
+
+app.get('/about-me',function(req,res){
+	res.sendFile(path.join(__dirname, 'ui', 'about-me.html'));
 });
 
-
-
+//To display another user profile
 app.get('/users/:userid',function(req,res){
 	var userId=req.params.userid;
 	pool.query("select \"userDetails\".*,\"user\".name,\"user\".username from \"userDetails\",\"user\" where \"userDetails\".user_id=$1 and \"user\".id=$1;",[userId],function(err,result){
@@ -598,9 +591,8 @@ app.get('/users/:userid',function(req,res){
 	});
 });
 
-
-app.get('/user',function(req,res){
-	
+//To display logged in user profile
+app.get('/user',function(req,res){	
 	if(req.session && req.session.auth && req.session.auth.userId){
 		var userId=req.session.auth.userId;
 		pool.query("select \"userDetails\".*,\"user\".name,\"user\".username,\"user\".id from \"userDetails\",\"user\" where \"userDetails\".user_id=$1 and \"user\".id=$1;",[userId],function(err,result){
@@ -614,112 +606,70 @@ app.get('/user',function(req,res){
 		res.sendFile(path.join(__dirname, 'ui', 'login.html'));	
 });
 
-app.get('/update-user/:userid',function(req,res){
-	var userId=req.params.userid;
-	pool.query("select \"userDetails\".*,\"user\".name,\"user\".username from \"userDetails\",\"user\" where \"userDetails\".user_id=$1 and \"user\".id=$1;",[userId],function(err,result){
-		if(err)
-			res.send(err);
-		else
-			res.send(result.rows[0]);
-	});
-});
 
+
+//To update user profile
 function editTemplate(data){
-	var template=`<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-		<link href="/ui/style.css" rel="stylesheet" />
-		<link href="/ui/blog.png" rel="shortcut icon">
-		<title>Blog</title>
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<title>One Page Resume</title>
-		<style type="text/css">
-			* { margin: 0; padding: 0; }
-			body { line-height: 24px;  }
-			.clear { clear: both; }
-			#page-wrap {  margin: 40px auto 60px; margin-left:5px; margin-right:5px;padding:20px;}        
-			h1 { margin: 0 0 16px 0; padding: 0 0 16px 0; font-family:Georgia; font-size: 42px; font-style: italic; }
-			h2 { font-size: 20px; margin: 0 0 6px 0; position: relative; }
-			h2 span { position: absolute; bottom: 0; right: 0; font-style: italic; font-family: Georgia, Serif; font-size: 16px; color: #999; font-weight: normal; }
-			p { margin: 11px 0 16px 0; }        
-			#objective { width: 700px; float: left; margin: 0 auto; text-align:justify; margin-bottom:10px; margin-top:10px}
-			#objective p { font-family: Georgia, Serif; font-style: italic; color: #666; }
-			dt { font-style: italic; font-weight: bold; font-size: 18px; text-align: left; padding: 0 24px 0 0; width: 82px; float: left; height: 100px; border-right: 1px solid #999;  }
-			dd { margin-left:115px; font-size: 18px; text-align: justify; padding: 0 26px 0 10; width: 400px; }
-			dd.clear { float: none; margin: 0; height: 15px; }
-		</style>
-	</head>
-	<body class="index">	
-		<ul class="nav_bar">
-			<li><a class="nav" href="/">Home</a></li>
-			<li><a class="nav" href="#news">Articles</a></li>
-			<li><a class="nav" href="#contact">Blog-Post</a></li>
-			<li ><a class="nav" href="/post">Post</a></li>
-			<li class="nav" style="float:right"><div id="check-login"><a href="/login">Login</a></div></li>
-			<li class="nav" style="float:right"><a class="active" href="/user">Profile</a></li>
-		</ul>
+	var template=`<head>		
+	<link href="/ui/style.css" rel="stylesheet" />
+	<link href="/ui/blog.png" rel="shortcut icon">
+	<title>Blog</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link href="https://fonts.googleapis.com/css?family=Roboto+Condensed" rel="stylesheet">
+	<style type="text/css">
+	* { margin: 0; padding: 0; }
+	body { line-height: 24px;  }
+	#page-wrap { margin-top: 30px; margin-left:5px; margin-right:5px;padding:20px;}         
+	.objective { max-width: 735px; float: left; margin: 0 auto; text-align:justify; margin-bottom:10px; margin-top:10px }
+	textarea{
+		border: none;
+		padding: 10px 0px 0px 10px;
+		font-family: Roboto Condensed;
+		font-size: 18px;
+		width:100%;
+		display:block;
+		position:relative;
+		margin-top: 20px;
+		word-wrap:break-word;
+		style='width:100%';
+	}
+	
+	body{
+		background:#1a130d;
+	}
+	
+	</style>
+</head>
+<body>
+<input type="checkbox" id="sidebartoggler" name="" value="" />
+<div class="page-wrap">
+  <label for="sidebartoggler" class="toggle">☰<img src="/ui/blog.png" style="width: 24px;
+    padding-left: 29px;"><div class="main_title" style="padding-top:0px;">Anupam Asok's Blog</div></label>
+  <div class="page-content" style="padding-left:10px; width:100%;">
+	<div class="index" style="margin-top:0px;">			
 		<div id="page-wrap">	
-			
-			<h1>Profile</h1>
-			<hr/>
-			
-			<div id="objective">
-				<p>
-				<b>Username :</b> <textarea rows="5" cols="80" style="float:right;" id="username">${data.username}</textarea>
-				</p>
-				
+			<div class="objective">
+				<textarea rows="2" cols="80" style="float:right;" id="name" placeholder="Name" >${data.name}</textarea>		
+				<textarea rows="2" cols="80" style="float:right;" id="phone" placeholder="Phone Number">${data.phone_no}</textarea>	
+				<textarea rows="2" cols="80" style="float:right;" id="email" placeholder="E-mail">${data.email}</textarea>
+				<textarea rows="8" cols="80" style="float:right;" id="about"  placeholder="About Me">${data.about}</textarea>				
 			</div>
-			<div id="objective">
-				<p>
-				<b>Name :</b> <textarea rows="5" cols="80" style="float:right;" id="name">${data.name}</textarea>
-				</p>
-				
-			</div>
-			
-			<div id="objective">
-				<p>
-				<b>Phone No. :</b> <textarea rows="5" cols="80" style="float:right;" id="phone">${data.phone_no}</textarea>
-				</p>
-				
-			</div>
-			<div id="objective">
-				<p>
-				<b>E-mail</b>: <textarea rows="5" cols="80" style="float:right;" id="email">${data.email}</textarea>
-				</p>
-				
-			</div>
-			
-			<div id="objective">
-				<p>
-				<b>About me</b>: <textarea rows="5" cols="80" style="float:right;" id="about">${data.description}</textarea>
-				</p>
-				
-			</div>
-			
-			
-			<div id="objective">
-				<p>
-				<b>Education</b>: <textarea rows="5" cols="80" style="float:right;" id="education">${data.education}</textarea>
-				</p>				
-			</div>
-			
-			<div id="objective">
-				<p>
-				<b>Skills</b>: <textarea rows="5" cols="80" style="float:right;" id="skills">${data.skills}</textarea>
-				</p>				
-			</div>
-			
-			<div id="objective">
-				<p>
-				<b>Experience</b>: <textarea rows="5" cols="80" style="float:right;" id="experience">${data.experience}</textarea>
-				</p>				
-			</div>			
-									
-		</div>
-		<input type="submit" id="submit-cmt" value=" Update Profile " class="button" style="margin-left:50%; margin-right:50%;"/>
-		
-	</body>
+			<input type="submit" id="submit-cmt" value=" Update Profile " class="button" style="width: 98%;    background: #1a130d;"/>
+		</div>		
+	</div>
+  </div>
+  <div class="sidebar">
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/about-me">About me</a></li>
+	  <li><a href="/user">Profile</a></li>
+	  <li><a href="/edit-profile">Edit Profile</a></li>
+	  <li id="check-login"><a href="/login">Login</a></li>
+    </ul>
+  </div>  
+</div>	
 	<script type="text/javascript">
-	function check_login(){		
+		function check_login(){		
 			var request=new XMLHttpRequest();		
 			request.onreadystatechange=function(){
 				if(request.status === 200){
@@ -731,20 +681,66 @@ function editTemplate(data){
 			request.send(null);		
 		}	
 		check_login();
-	
+		var submit=document.getElementById('submit-cmt');
+		submit.onclick=function(){
+			
+			var request=new XMLHttpRequest();		
+			request.onreadystatechange=function(){
+				if(request.status === 200){
+					submit.value="Profile Updated!";
+					window.location="/user";
+				}
+			}			
+			var name=document.getElementById('name').value;
+			var email=document.getElementById('email').value;
+			var phone=document.getElementById('phone').value;
+			var about=document.getElementById('about').value;
+			if (name == null || name == "") {
+				alert("Name cannot be empty!");
+			}
+			else if (email == null || email == "") {
+				alert("Heading cannot be empty!");
+			}
+			else if (phone == null || phone == "") {
+				alert("Phone Number cannot be empty!");
+			}
+			else if(about == null || about ==""){
+				alert("About me cannot be empty!");
+			}
+			else{
+			submit.value="Updating...";
+				request.open('POST',"/update-user",true);
+				request.setRequestHeader('Content-Type','application/json');
+				request.send(JSON.stringify({id:${data.id},name:name,email:email,phone:phone,about:about}));
+			}
+		}
 	</script>
+</body>
 </head>`;
 return template;
 }
 
 app.post('/update-user',function(req,res){
-	
+	var id=req.body.id;
+	var name=req.body.name;
+	var phone_no=req.body.phone;	
+	var about=req.body.about;
+	var email=req.body.email;
+	pool.query("UPDATE \"user\" SET  name=$1 WHERE id=$2",[name,id],function(err,result){});
+	pool.query("UPDATE \"userDetails\" SET  \"phone_no\"=$1, \"email\"=$2, \"about\"=$3 WHERE \"user_id\" = $4",[phone_no,email,about,id],function(err,result){
+		if(err){
+			res.status(500).send("Couldn't Update! Try again later.");
+		}
+		else{
+			res.send("Update made!");
+		}
+	});
 });
 
 app.get('/edit-profile',function(req,res){
 	if(req.session && req.session.auth && req.session.auth.userId){
 		var userId=req.session.auth.userId;
-		pool.query("select \"userDetails\".*,\"user\".name,\"user\".username,\"user\".id from \"userDetails\",\"user\" where \"userDetails\".user_id=$1 and \"user\".id=$1;",[userId],function(err,result){
+		pool.query("select \"userDetails\".*,\"user\".name,\"user\".id from \"userDetails\",\"user\" where \"userDetails\".user_id=$1 and \"user\".id=$1;",[userId],function(err,result){
 			if(err)
 				res.send(err);
 			else
@@ -754,6 +750,12 @@ app.get('/edit-profile',function(req,res){
 	else
 		res.sendFile(path.join(__dirname, 'ui', 'login.html'));	
 });
+
+app.get('/ui/:filename',function(req,res){
+	var filename=req.params.filename;
+	res.sendFile(path.join(__dirname, 'ui', filename));
+});
+
 
 var port = 8080; // Use 8080 for local development because you might already have apache running on 80
 app.listen(8080, function () {

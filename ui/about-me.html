@@ -1,0 +1,145 @@
+<!doctype html>
+<html>
+<head>
+	<link href="/ui/style.css" rel="stylesheet" />
+	<link href="/ui/blog.png" rel="shortcut icon">
+	<title>Blog</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link href="https://fonts.googleapis.com/css?family=Rancho" rel="stylesheet">
+	<style>
+	#pro{
+		width: 208px;
+		height: 201px;
+		border-radius: 50%;
+		position: absolute;
+		left:0;
+		right:0;
+		margin:auto;
+		top:150px;
+	}
+
+	#logo {
+		width: 40px; 
+		height: 40px;
+		border-radius:50%;
+		left:0;
+		right:0;
+		margin:auto;
+		position:relative;
+		-webkit-transition:cubic-bezier(.34,.43,0,1.02) 0.4s;
+		-moz-transition:cubic-bezier(.34,.43,0,1.02) 0.4s;
+		transition:cubic-bezier(.34,.43,0,1.02) 0.4s;
+		fill: white;
+	}
+
+	#logo:hover{
+		background:blue;
+		border-radius:50%;
+		fill: white;
+	}
+
+	body{
+		background:#1a130d;
+		line-height: 31px;
+	}
+	*{ 
+		margin: 0; 
+		padding: 0; 
+	}
+	.clear { 
+		clear: both; 
+	}
+	#page-wrap {  
+		margin-top:50px;
+		margin-left:5px; margin-right:14px;padding:20px;
+		padding: 34px;
+		height:500px;
+	}        
+	dd {  
+		margin-top:200px;
+		font-family: Rancho;
+		left:0;
+		right:0;
+		margin:auto;
+		color:white; 
+		font-size: 24px; 
+		text-align: 
+		center; padding: 0 18px 0 10; 
+		max-width: 480px; 
+		word-wrap: break-word;
+	}
+	dd.clear { 
+		float: none; 
+		margin: 0; 
+		height: 15px; 
+	}
+	hr{
+		border-bottom: 1px solid white;
+		box-shadow: 0 20px 20px -20px white;
+	}
+	dl{
+		margin-top:200px;
+	}
+	dd #logo{
+		margin-left:43%;
+		margin-right:43%;
+	}
+	</style>
+</head>
+<body>
+	<input type="checkbox" id="sidebartoggler" name="" value="" />
+	<div class="page-wrap">
+		<label for="sidebartoggler" class="toggle">☰<img src="/ui/blog.png" style="width: 24px;
+		padding-left: 29px;"><div class="main_title" style="padding-top:0px;">Anupam Asok's Blog</div></label>
+		<div class="page-content" style="padding-left:10px;">
+		<div class="index">
+			<div id="page-wrap">	
+				<dd class="clear"></dd>
+				<img id="pro" src="/ui/pro_pic.jpg"/>
+				<dl>
+				<dd><hr/><br/>
+				Hey guys! I'm Anupam Asok. A second year student of Government Engineering College, Thrissur pursuing B.Tech in Computer Science and Engineering. I really enjoyed making this blog. Thanks to the whole IMAD team and friends in helping me and giving motivation to make this blog. Hope, you guys also enjoy this blog!
+				<br/><br/>
+				</dd>
+				<dd>
+				<svg viewBox="0 0 512 512" id="logo"><path class="box" d="M211.9 197.4h-36.7v59.9h36.7V433.1h70.5V256.5h49.2l5.2-59.1h-54.4c0 0 0-22.1 0-33.7 0-13.9 2.8-19.5 16.3-19.5 10.9 0 38.2 0 38.2 0V82.9c0 0-40.2 0-48.8 0 -52.5 0-76.1 23.1-76.1 67.3C211.9 188.8 211.9 197.4 211.9 197.4z"/></svg>
+				</dd>
+				<dd class="clear"></dd>	
+				</dl>
+				<div class="clear"></div>			
+			</div>
+		</div>
+		</div><br/><br/><br/>
+		<div id="credit">Made  with  ♥  by  Anupam  Asok</div>
+		<div class="sidebar">
+			<ul>
+			  <li><a href="/">Home</a></li>
+			  <li><a href="/about-me">About me</a></li>
+			  <li><a href="/user">Profile</a></li>
+			  <li><a href="/edit-profile">Edit Profile</a></li>
+			  <div id="check-login"><li><a href="/login">Login</a></li></div>
+			</ul>
+		</div>
+	</div>
+	<script type="text/javascript">
+		
+		var x = document.getElementById("logo");
+		x.onclick=function(){
+			window.location="https://www.facebook.com/anupam.asok";
+		}
+		function check_login(){		
+			var request=new XMLHttpRequest();		
+			request.onreadystatechange=function(){
+				if(request.status === 200){
+						var div=document.getElementById('check-login');					
+						div.innerHTML="<li><a href=\"/logout\">Logout</a></li>";
+					}
+			}
+			request.open('GET',"/check-login",true);
+			request.send(null);		
+		}	
+		check_login();
+		window.onload=check_login();
+	</script>
+</body>
+</html>

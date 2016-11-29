@@ -1,46 +1,28 @@
+ @import url(https://fonts.googleapis.com/css?family=Abel);
  body{
 	max-width:800px;
-	margin: 0 auto;
-	margin-left:20px;
-	margin-right:20px;
-	margin-top: 50px;
-	margin-bottom:60px;
-	background-image: url("bg.gif");
-    font-family:serif;
+	left:0;
+	right:0;
+	top:0;
+	bottom:0;
+	margin:auto;
+	background-image: none;
+
  }
  #textarea{
 	min-height:300px;
+	border:none;
  }
 
-.input {
-	margin-top: 1em;
-	padding: 0.85em 0.15em;
-	max-width: 100px;
-	background: transparent;
-	color: #595F6E;
-	padding: 0.8em;
-	width: 100%;
-	border: none;
-	border-radius: 5px;
-	background: white;
-	color: #aaa;
-	font-weight: bold;
+#mceu_11{
+	width:92%;
+	margin-left:10px;
+	margin-right:10px;
+	 font-family:Abel;
 }
 
-#title{
-	max-width:720px;
+.article-param{
+	    width: 86%;
+		margin-left: 10px;
+    margin-right: 10px;
 }
-
-#heading{
-	max-width:692px;
-}
-
-.button{	
-			font-size:15px;
-			margin-top:10px;
-            background: rgb(200,230,230); /* this is a light blue */
-			 border-radius: 10px;
-            text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
-			margin-bottom:10px;
-        }
-

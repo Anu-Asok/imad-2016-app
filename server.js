@@ -36,7 +36,7 @@ function create_template(data,name){
     `<html>
     <head>
         <title>
-			Articles | ${title}
+			Articles | ${heading}
         </title>
 		<link rel="shortcut icon" href="/ui/blog.png">
 		<link rel="stylesheet" href="/ui/style.css"/>

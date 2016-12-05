@@ -1,5 +1,3 @@
-//process.env.DB_PASSWORD
-
 var express = require('express');
 var morgan = require('morgan');
 var path = require('path');
@@ -11,7 +9,7 @@ var config={
     database:"anu-asok",
     host:"db.imad.hasura-app.io",
     port:"5432",
-    password: "db-anu-asok-20933"
+    password: process.env.DB_PASSWORD
 };
 var pool=new Pool(config);
 

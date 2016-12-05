@@ -9,7 +9,7 @@ var config={
     database:"anu-asok",
     host:"db.imad.hasura-app.io",
     port:"5432",
-    password: process.env.DB_PASSWORD
+    password: "db-anu-asok-20933"
 };
 var pool=new Pool(config);
 
